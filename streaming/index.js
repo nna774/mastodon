@@ -19,7 +19,7 @@ dotenv.config({
 if (cluster.isMaster) {
   // cluster master
 
-  const core = +process.env.STREAMING_CLUSTER_NUM || (env === 'development' ? 1 : os.cpus().length - 1)
+  const core = +process.env.STREAMING_CLUSTER_NUM || (env === 'development' ? 1 : (os.cpus().length > 1 ? os.cpus().length - 1 : 1))
   const fork = () => {
     const worker = cluster.fork();
     worker.on('exit', (code, signal) => {
@@ -285,11 +285,11 @@ if (cluster.isMaster) {
   })
 
   app.get('/api/v1/streaming/hashtag', (req, res) => {
-    streamFrom(`timeline:hashtag:${req.params.tag}`, req, streamToHttp(req, res), streamHttpEnd(req), true)
+    streamFrom(`timeline:hashtag:${req.query.tag}`, req, streamToHttp(req, res), streamHttpEnd(req), true)
   })
 
   app.get('/api/v1/streaming/hashtag/local', (req, res) => {
-    streamFrom(`timeline:hashtag:${req.params.tag}:local`, req, streamToHttp(req, res), streamHttpEnd(req), true)
+    streamFrom(`timeline:hashtag:${req.query.tag}:local`, req, streamToHttp(req, res), streamHttpEnd(req), true)
   })
 
   wss.on('connection', ws => {

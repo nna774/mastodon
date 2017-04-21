@@ -35,7 +35,8 @@ const Column = React.createClass({
     heading: React.PropTypes.string,
     icon: React.PropTypes.string,
     children: React.PropTypes.node,
-    active: React.PropTypes.bool
+    active: React.PropTypes.bool,
+    hideHeadingOnMobile: React.PropTypes.bool
   },
 
   mixins: [PureRenderMixin],
@@ -55,16 +56,16 @@ const Column = React.createClass({
   },
 
   render () {
-    const { heading, icon, children, active } = this.props;
+    const { heading, icon, children, active, hideHeadingOnMobile } = this.props;
 
     let header = '';
 
     if (heading) {
-      header = <ColumnHeader icon={icon} active={active} type={heading} onClick={this.handleHeaderClick} />;
+      header = <ColumnHeader icon={icon} active={active} type={heading} onClick={this.handleHeaderClick} hideOnMobile={hideHeadingOnMobile} />;
     }
 
     return (
-      <div role='section' className='column' onWheel={this.handleWheel}>
+      <div role='section' aria-label={heading} className='column' onWheel={this.handleWheel}>
         {header}
         {children}
       </div>
